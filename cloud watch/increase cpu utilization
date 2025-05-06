@@ -1,0 +1,7 @@
+#!/bin/bash
+while true
+do
+  curl -s https://www.google.com >/dev/null &
+  openssl speed sha256 >/dev/null &
+  sleep 0.1 
+done
