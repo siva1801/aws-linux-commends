@@ -1,4 +1,4 @@
-#📈 EC2 Auto Upgrade with Lambda, SNS, and CloudWatch *
+# 📈 EC2 Auto Upgrade with Lambda, SNS, and CloudWatch *
 
   This project demonstrates how to automatically upgrade an EC2 instance from a t2.micro to a t3.micro instance when CPU utilization exceeds 90%. It uses Lambda, IAM Roles, SNS, and CloudWatch Alarms to automate the process.
 
