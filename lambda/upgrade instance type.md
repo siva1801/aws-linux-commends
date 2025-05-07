@@ -5,7 +5,7 @@ This project demonstrates how to automatically upgrade an EC2 instance from a `t
 
 ---
 
-## 🛠️ Prerequisites
+##  Prerequisites
 
 - AWS CLI configured
 - IAM user with necessary permissions
@@ -14,7 +14,7 @@ This project demonstrates how to automatically upgrade an EC2 instance from a `t
 
 ---
 
-## 🔧 Step-by-Step Setup
+##  Step-by-Step Setup
 
 ### 1. Create an EC2 Instance
 
@@ -47,10 +47,7 @@ This project demonstrates how to automatically upgrade an EC2 instance from a `t
     }
   ]
 }
-
-
-### 3. Create a Lambda Function
-
+## 3. Create a Lambda Function
 - **Runtime**: Python 3.x  
 - **Permissions**: Attach the IAM role created in Step 2  
 - **Function logic**: Stops the instance, modifies the instance type to `t3.micro`, and restarts it.
