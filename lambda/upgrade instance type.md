@@ -51,7 +51,7 @@ This project demonstrates how to automatically upgrade an EC2 instance from a `t
 ---
 
 ## 3. Create a Lambda Function
-- **Runtime**: Python 3.x  
+- **Runtime**: Python 3.9  
 - **Permissions**: Attach the IAM role created in Step 2  
 - **Function logic**: Stops the instance, modifies the instance type to `t3.micro`, and restarts it.
 
