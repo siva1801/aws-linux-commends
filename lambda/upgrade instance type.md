@@ -47,6 +47,9 @@ This project demonstrates how to automatically upgrade an EC2 instance from a `t
     }
   ]
 }
+```
+---
+
 ## 3. Create a Lambda Function
 - **Runtime**: Python 3.x  
 - **Permissions**: Attach the IAM role created in Step 2  
@@ -82,8 +85,8 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': f'Instance {INSTANCE_ID} changed to {NEW_INSTANCE_TYPE} and restarted.'
     }
-
-
+```
+---
 ### 4. Create an SNS Topic
 
 - **Name**: `HighCPUAlarmTopic`
