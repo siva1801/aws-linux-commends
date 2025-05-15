@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deletes all available EBS volumes in the Mumbai (ap-south-1) region using a Lambda-backed custom resource
+
+Resources:
+  VolumeCleanupLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: VolumeCleanupPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:DescribeVolumes
+                  - ec2:DeleteVolume
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+  VolumeCleanupFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Runtime: python3.9
+      Timeout: 300
+      Role: !GetAtt VolumeCleanupLambdaRole.Arn
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+
+          def handler(event, context):
+              try:
+                  ec2 = boto3.client('ec2', region_name='ap-south-1')
+                  volumes = ec2.describe_volumes(Filters=[{'Name': 'status', 'Values': ['available']}])['Volumes']
+                  for vol in volumes:
+                      volume_id = vol['VolumeId']
+                      try:
+                          ec2.delete_volume(VolumeId=volume_id)
+                          print(f"Deleted volume: {volume_id}")
+                      except Exception as e:
+                          print(f"Failed to delete volume {volume_id}: {e}")
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+              except Exception as e:
+                  print(f"Error: {e}")
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {})
+
+  TriggerVolumeCleanup:
+    Type: Custom::VolumeCleanup
+    Properties:
+      ServiceToken: !GetAtt VolumeCleanupFunction.Arn
